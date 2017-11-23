@@ -135,7 +135,7 @@ sum = 0.0
 for indice in fe.keys():
     sum+=((fo[indice]-fe[indice])**2)/fe[indice]
 print("sum", sum)
-if sum < 18.5475:
+if sum < 7.81:
   print("No se rechaza que los numeros siguen una distribucion uniforme")
 else:
   print("Se rechaza que los numeros siguen una distribucion uniforme")
