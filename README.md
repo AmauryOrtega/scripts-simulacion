@@ -6,7 +6,17 @@
 
 ## Procedimientos especiales (Dist Normal)
 
-Lluvia
+El procedimiento especial para generar una variable aleatoria con distribucion normal es expresado con la siguiente ecuacion:
+
+![Normal_1](Normal_1.png)
+
+Sin embargo, la bibliografia nos dice que esta demostrado para `n=12` asi que la ecuacion queda asi:
+
+![Normal_2](Normal_2.png)
+
+[Explicacion del libro](Normal.png)
+
+## Lluvia
 
 ## Procedimientos especiales (Dist binomial)
 
