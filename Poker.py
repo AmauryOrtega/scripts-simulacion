@@ -1,16 +1,16 @@
-numeros = ["0.00000", "0.18750", "0.12500", "0.81250", "0.25000", "0.43750", "0.37500", "0.06250", "0.50000", "0.68750", "0.62500", "0.31250", "0.75000", "0.93750", "0.87500", "0.56250"]
-prob = {'td':0.30240, '1p':0.50400, '2p':0.10800, 'tercia':0.07200, 'full':0.00900, 'poker':0.00450, 'quintilla':0.00010}
 """
 td - todos diferentes
 1p - 1 par
 2p - 2 pares
 tercia - 3 iguales
-full - 4 iguales
-poker - 1 trio y 1 par
+full - 1 trio y 1 par
+poker - 4 iguales
 quintilla - todos iguales
 """
 
-IMPRIMIR = False
+IMPRIMIR = True
+prob = {'td':0.30240, '1p':0.50400, '2p':0.10800, 'tercia':0.07200, 'full':0.00900, 'poker':0.00450, 'quintilla':0.00010}
+numeros = ["0.00000", "0.18750", "0.12500", "0.81250", "0.25000", "0.43750", "0.37500", "0.06250", "0.50000", "0.68750", "0.62500", "0.31250", "0.75000", "0.93750", "0.87500", "0.56250"]
 
 # Limpieza de numeros
 numeros_limpios = []
@@ -27,7 +27,7 @@ def quintilla(numero):
       if digito != digito1:
         return False
     return True
-def poker(numero):
+def full(numero):
   # Conteo
   guia = dict.fromkeys(numero, 0)
   for digito in numero:
@@ -35,7 +35,7 @@ def poker(numero):
   if(2 in guia.values() and 3 in guia.values()):
     return True
   return False
-def full(numero):
+def poker(numero):
   if(tercia(numero)):
     # Conteo
     guia = dict.fromkeys(numero, 0)
@@ -134,7 +134,7 @@ if IMPRIMIR:
 sum = 0.0
 for indice in fe.keys():
     sum+=((fo[indice]-fe[indice])**2)/fe[indice]
-
+print("sum", sum)
 if sum < 18.5475:
   print("No se rechaza que los numeros siguen una distribucion uniforme")
 else:
