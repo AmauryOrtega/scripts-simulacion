@@ -16,7 +16,7 @@ Sin embargo, la bibliografia nos dice que esta demostrado para `n = 12` asi que 
 
 [Explicacion del libro](Normal.png).
 
-## Lluvia
+### Lluvia
 
 ![Lluvia](Normal_Lluvia.png)
 
@@ -51,7 +51,7 @@ for corrida in range(n_corridas):
     print("[" + str(corrida + 1) + "] Prob de T > 21°: "
         + str("%.2f" % round(resultado/30.0, 2)) + " en 30 dias")
     resultado_final += resultado/30.0
-    print("P(T>21°C): " + str("%.2f" % round(resultado_final/n_corridas, 2)))
+print("P(T>21°C): " + str("%.2f" % round(resultado_final/n_corridas, 2)))
 ```
 Esto da como salida:
 ```shell
