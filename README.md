@@ -6,17 +6,63 @@
 
 ## Procedimientos especiales (Dist Normal)
 
-El procedimiento especial para generar una variable aleatoria con distribucion normal es expresado con la siguiente ecuacion:
+El procedimiento especial para generar una variable aleatoria `x`, con distribucion normal con una media y desviacion estandar en particular, es expresado con la siguiente ecuacion:
 
 ![Normal_1](Normal_1.png)
 
-Sin embargo, la bibliografia nos dice que esta demostrado para `n=12` asi que la ecuacion queda asi:
+Sin embargo, la bibliografia nos dice que esta demostrado para `n = 12` asi que la ecuacion queda asi:
 
 ![Normal_2](Normal_2.png)
 
-[Explicacion del libro](Normal.png)
+[Explicacion del libro](Normal.png).
 
 ## Lluvia
+
+![Lluvia](Normal_Lluvia.png)
+
+Del enunciado sabemos que la `MEDIA = 18.7` y que `DESV_ESTANDAR = 5`. Para generar una variable aleatoria `x` usamos el siguiente metodo:
+```python
+import random
+def var_aleatoria():
+    MEDIA = 18.7
+    DESV_ESTANDAR = 5.0
+    sumatoria = 0.0
+    for i in range(12):
+        sumatoria += random.uniform(0, 1)
+    return MEDIA + DESV_ESTANDAR*(sumatoria - 6.0)
+```
+En este caso, se ejecutaran `n_corridas` donde cada una estará dada por 30 variables aleatorias debido a que cada variable representa un dia del mes. Un solo mes, lo mismo que una corrida, se ejecuta asi:
+```python
+# resultado = Cuantas veces la temperatura estuvo > 21°C en 1 mes
+resultado = 0
+for dia in range(30):
+    if(var_aleatoria() > 21.0):
+        resultado += 1
+```
+De esta forma la probabilidad que la temperatura sea > de 21°C en ese mes es `resultado/30.0`. Esto ejecutado `n_corridas` seria:
+```python
+n_corridas = 5
+resultado_final = 0 # Promedio de probabilidades que la temperatura > 21°C despues de n_corridas
+for corrida in range(n_corridas):
+    # INICIO Corrida
+    # resultado = Cuantas veces la temperatura estuvo > 21°C en 1 mes
+    resultado # Tendra un valor despues de la corrida
+    # FIN Corrida
+    print("[" + str(corrida + 1) + "] Prob de T > 21°: "
+        + str("%.2f" % round(resultado/30.0, 2)) + " en 30 dias")
+    resultado_final += resultado/30.0
+    print("P(T>21°C): " + str("%.2f" % round(resultado_final/n_corridas, 2)))
+```
+Esto da como salida:
+```shell
+[1] Prob de T > 21°: 0.33 en 30 dias
+[2] Prob de T > 21°: 0.37 en 30 dias
+[3] Prob de T > 21°: 0.40 en 30 dias
+[4] Prob de T > 21°: 0.50 en 30 dias
+[5] Prob de T > 21°: 0.43 en 30 dias
+P(T>21°C): 0.41
+```
+Para ver el codigo completo, [click aqui](Normal_Lluvia.py).
 
 ## Procedimientos especiales (Dist binomial)
 
@@ -25,20 +71,20 @@ El procedimiento especial para generar una variable aleatoria con distribucion b
 - Contar cuantos de estos `R` son menores que una probabilidad `P`
 - La cantidad contada en el paso anterior es la variable aleatoria
 
-[Explicacion del libro](Binomial.png)
+[Explicacion del libro](Binomial.png).
 
 ### Alternadores
 
 ![Alternadores](Binomial_Alternadores.png)
 
-En este caso, se ejecutaran `n_corridas` donde cada una estará dada por `n=10` alternadores debido a que se consultan 10. Mi probabilidad de que un alternador este defectuoso es de `P=0.2`. Con esto, 1 corrida sera lo siguiente:
+En este caso, se ejecutaran `n_corridas` donde cada una estará dada por `n = 10` alternadores debido a que se consultan 10. Mi probabilidad de que un alternador este defectuoso es de `P = 0.2`. Con esto, 1 corrida sera lo siguiente:
 ```python
 import random
 n_alternadores = 10
 P = 0.2
 n_defectuosos = 0
 for alternador in range(n_alternadores):
-    if random.random() < P:
+    if random.random.uniform(0, 1) < P:
         n_defectuosos += 1
 ```
 De esta forma `n_defectuosos` seria mi variable aleatoria. Haciendo el codigo anterior multiples veces y sacando las probabilidades para las preguntas seria así:
@@ -86,14 +132,14 @@ Para ver el codigo completo, [click aqui](Binomial_Alternadores.py).
 
 __¿Cual es la probabilidad de obtener 20 veces el numero 3 al lanzar 51 veces un dado?__
 
-En este caso `n=51` debido a que una corrida correspondera a 51 lanzamientos. La probabilidad de sacar 3 un dado es `P=1/6`. Una corrida esta expresada de la siguiente forma:
+En este caso `n = 51` debido a que una corrida correspondera a 51 lanzamientos. La probabilidad de sacar 3 en un dado es `P = 1/6`. Una corrida esta expresada de la siguiente forma:
 ```python
 import random
 n_lanzamientos = 51
 P = 1.0/6.0
 numero_3es = 0
 for lanzamiento in range(n_lanzamientos):
-    R = random.random()
+    R = random.random.uniform(0, 1)
     if R < P:
         numero_3es += 1.0
 print("51 Lanzamientos con", numero_3es, "3es")

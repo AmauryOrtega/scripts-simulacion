@@ -19,7 +19,7 @@ for corrida in range(n_corridas):
     # INICIO Corrida
     n_defectuosos = 0
     for alternador in range(n_alternadores):
-        if random.random() < P:
+        if random.random.uniform(0, 1) < P:
             n_defectuosos += 1
     # FIN Corrida
     # Conteo para probabilidades
