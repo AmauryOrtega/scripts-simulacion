@@ -7,7 +7,7 @@ for corrida in range(n_corridas):
 	# INICIO Corrida
 	numero_3es = 0
 	for lanzamiento in range(n_lanzamientos):
-		R = random.random.uniform(0, 1)
+		R = random.uniform(0, 1)
 		if R < P:
 			numero_3es += 1.0
 	print("51 Lanzamientos con", numero_3es, "3es")

@@ -9,7 +9,7 @@ def var_aleatoria():
         sumatoria += random.uniform(0, 1)
     return MEDIA + DESV_ESTANDAR*(sumatoria - 6.0)
 
-resultado_final = 0 # Promedio de probabilidades que la temperatura > 21°C despues de n_corridas
+resultado_final = 0 # Promedio de probabilidades que la temperatura > 21°C después de n_corridas
 for corrida in range(n_corridas):
     # INICIO Corrida
     # resultado = Cuantas veces la temperatura estuvo > 21°C en 1 mes
@@ -19,6 +19,6 @@ for corrida in range(n_corridas):
             resultado += 1
     # FIN Corrida
     print("[" + str(corrida + 1) + "] Prob de T > 21°: "
-        + str("%.2f" % round(resultado/30.0, 2)) + " en 30 dias")
+        + str("%.2f" % round(resultado/30.0, 2)) + " en 30 días")
     resultado_final += resultado/30.0
 print("P(T>21°C): " + str("%.2f" % round(resultado_final/n_corridas, 2)))

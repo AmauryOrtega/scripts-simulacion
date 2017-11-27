@@ -1,140 +1,57 @@
-"""
-td - todos diferentes
-1p - 1 par
-2p - 2 pares
-tercia - 3 iguales
-full - 1 trio y 1 par
-poker - 4 iguales
-quintilla - todos iguales
-"""
+import manos
 
-IMPRIMIR = True
-prob = {'td':0.30240, '1p':0.50400, '2p':0.10800, 'tercia':0.07200, 'full':0.00900, 'poker':0.00450, 'quintilla':0.00010}
-numeros = ["0.00000", "0.18750", "0.12500", "0.81250", "0.25000", "0.43750", "0.37500", "0.06250", "0.50000", "0.68750", "0.62500", "0.31250", "0.75000", "0.93750", "0.87500", "0.56250"]
+# Nivel de verbose
+entrada = input("Desea ver todos los detalles?(Y/N) >")
+IMPRIMIR = (entrada == 'Y' or entrada == 'y')
 
-# Limpieza de numeros
-numeros_limpios = []
-for numero in numeros:
-  numeros_limpios.append(numero[2:])
+# Leyendo numeros
+numeros = []
+ruta = "numeros-poker.txt"
+# ruta = "numeros-poker-2.txt"
+with open(ruta, "r") as archivo:
+    for linea in archivo:
+        numeros.append(linea[2:7])
+    archivo.close()
 
-# Que tengo
+# Mostrando numeros
 if IMPRIMIR:
-  print(numeros_limpios)
+  print(numeros)
 
-def quintilla(numero):
-    digito1 = numero[0]
-    for digito in numero:
-      if digito != digito1:
-        return False
-    return True
-def full(numero):
-  # Conteo
-  guia = dict.fromkeys(numero, 0)
-  for digito in numero:
-    guia[digito]+=1
-  if(2 in guia.values() and 3 in guia.values()):
-    return True
-  return False
-def poker(numero):
-  if(tercia(numero)):
-    # Conteo
-    guia = dict.fromkeys(numero, 0)
-    for digito in numero:
-      guia[digito]+=1
-    for conteo in guia.values():
-      if conteo >= 4:
-        return True
-    return False
-  else:
-    return False
-def tercia(numero):
-  # Conteo
-  guia = dict.fromkeys(numero, 0)
-  for digito in numero:
-    guia[digito]+=1
-  # Impar
-  for conteo in guia.values():
-    if conteo >= 3:
-      return True
-  return False
-def onep(numero):
-  # Conteo
-  guia = dict.fromkeys(numero, 0)
-  for digito in numero:
-    guia[digito]+=1
-  # Par
-  for conteo in guia.values():
-    if conteo >= 2:
-      return True
-  return False
-def twop(numero):
-  # Conteo
-  guia = dict.fromkeys(numero, 0)
-  for digito in numero:
-    guia[digito]+=1
-  # Primer par
-  # Solo si sabemos que habia uno
-  if onep(numero):
-    par = None
-    for conteo in guia.items():
-      if conteo[1] >= 2:
-        par = conteo[0]
-        break
-    # Quitamos el que habia
-    del guia[par]
-    # Segundo par
-    for conteo in guia.values():
-      if conteo >= 2:
-        return True
-    return False
-  else:
-    return False
-def td(numero):
-  return not (len(numero) != len(set(numero)))
-def tipo(numero):
-  if quintilla(numero):
-    return 'quintilla'
-  elif poker(numero):
-    return 'poker'
-  elif full(numero):
-    return 'full'
-  elif tercia(numero):
-    return 'tercia'
-  elif twop(numero):
-    return '2p'
-  elif onep(numero):
-    return '1p'
-  else:
-    return 'td'
-
+# Frecuencia observada
 fo = {'td':0, '1p':0, '2p':0, 'tercia':0, 'full':0, 'poker':0, 'quintilla':0}
-
+# Frecuencia esperada
 fe = {'td':0, '1p':0, '2p':0, 'tercia':0, 'full':0, 'poker':0, 'quintilla':0}
-for indice in fe.keys():
-    fe[indice]=len(numeros_limpios)*prob[indice]
+# Calculando frecuencia esperada
+for tipo_mano in fe.keys():
+    fe[tipo_mano] = len(numeros) * manos.probabilidad[tipo_mano]
 
-for numero in numeros_limpios:
-  if IMPRIMIR:
-    print("#", numero)
-    print("quintilla:", quintilla(numero))
-    print("poker:", poker(numero))
-    print("full:", full(numero))
-    print("tercia:", tercia(numero))
-    print("2p:", twop(numero))
-    print("1p:", onep(numero))
-    print("td:", td(numero))
-    print("-"*5)
-  fo[tipo(numero)]+=1
+# Contando la frecuencia observada
+for numero in numeros:
+    fo[manos.tipo(numero)] += 1
+    if IMPRIMIR:
+        print("#", numero)
+        print("quintilla:", manos.quintilla(numero))
+        print("poker:", manos.poker(numero))
+        print("full:", manos.full(numero))
+        print("tercia:", manos.tercia(numero))
+        print("2p:", manos.twop(numero))
+        print("1p:", manos.onep(numero))
+        print("td:", manos.td(numero))
+        print("-"*5)
 
+# Mostrar la frecuencia esperada y observada obtenida
 if IMPRIMIR:
-  print("#"*5, "Frecuencias", "#"*5)
-  print(fe, "=", sum(fe.values()))
-  print(fo, "=", sum(fo.values()))
+    print("#"*5, "Frecuencias", "#"*5)
+    print(fe, "=", sum(fe.values()))
+    print(fo, "=", sum(fo.values()))
 
+# Calculando X^2
 sum = 0.0
-for indice in fe.keys():
-    sum+=((fo[indice]-fe[indice])**2)/fe[indice]
-print("sum", sum)
+for tipo_mano in fe.keys():
+    sum += ((fo[tipo_mano]-fe[tipo_mano])**2)/fe[tipo_mano]
+
+# Resultado
+print(sum, "< 7.81")
 if sum < 7.81:
   print("No se rechaza que los numeros siguen una distribucion uniforme")
 else:
