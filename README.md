@@ -149,6 +149,8 @@ Ganó
 % de Perder 20.00%
 ```
 
+Para ver el código completo, [click aqui](Volados.py).
+
 ## Procedimientos especiales (Dist Normal)
 
 El procedimiento especial para generar una variable aleatoria `x`, con distribución normal con una media y desviación estándar en particular, es expresado con la siguiente ecuación:
