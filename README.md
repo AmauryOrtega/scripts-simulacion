@@ -203,6 +203,7 @@ td: True
 - `full` 1 trio y 1 par
 - `poker` 4 iguales
 - `quintilla` todos iguales
+
 Luego se calcula el `X^2` y se da el resultado así:
 ```python
 # Mostrar la frecuencia esperada y observada obtenida
