@@ -2,6 +2,235 @@
 
 ## Prueba poker
 
+Esta prueba es similar a la prueba de frecuencias sin embargo, aquí se cuentan los números con 5 dígitos decimales que sigan los siguientes patrones:
+
+![Manos](Poker-manos.png)
+
+Sabiendo que la frecuencia observada es aquella que se consigue al contar y que la frecuencia esperada para cada patrón es `probabilidad de patrón x * numero de datos`. Con esto se calcula el `X^2` así:
+
+![X](Poker-1.png)
+
+Y si este valor es inferior a `7.81`, no se puede rechazar la hipótesis que los números provienen de una distribución uniforme.
+
+[Explicacion del libro](Poker.png).
+
+Para encapsular la lógica de detectar que tipo de mano es un número en particular, se creó el modulo `manos.py`. De este se hará uso primordial al método `tipo(numero)` donde `numero` es un `string`; Y de la variable probabilidad.
+
+```python
+# manos.py
+"""
+td - todos diferentes
+1p - 1 par
+2p - 2 pares
+tercia - 3 iguales
+full - 1 trio y 1 par
+poker - 4 iguales
+quintilla - todos iguales
+"""
+probabilidad = {'td':0.30240, '1p':0.50400, '2p':0.10800, 'tercia':0.07200, 'full':0.00900, 'poker':0.00450, 'quintilla':0.00010}
+def quintilla(numero):
+    digito1 = numero[0]
+    for digito in numero:
+        if digito != digito1:
+            return False
+    return True
+def full(numero):
+    # Conteo
+    guia = dict.fromkeys(numero, 0)
+    for digito in numero:
+        guia[digito]+=1
+    if(2 in guia.values() and 3 in guia.values()):
+        return True
+    return False
+def poker(numero):
+    if(tercia(numero)):
+        # Conteo
+        guia = dict.fromkeys(numero, 0)
+        for digito in numero:
+            guia[digito]+=1
+        for conteo in guia.values():
+            if conteo >= 4:
+                return True
+        return False
+    else:
+        return False
+def tercia(numero):
+    # Conteo
+    guia = dict.fromkeys(numero, 0)
+    for digito in numero:
+        guia[digito]+=1
+    # Impar
+    for conteo in guia.values():
+        if conteo >= 3:
+            return True
+    return False
+def onep(numero):
+    # Conteo
+    guia = dict.fromkeys(numero, 0)
+    for digito in numero:
+        guia[digito]+=1
+    # Par
+    for conteo in guia.values():
+        if conteo >= 2:
+            return True
+    return False
+def twop(numero):
+    # Conteo
+    guia = dict.fromkeys(numero, 0)
+    for digito in numero:
+        guia[digito]+=1
+    # Primer par
+    # Solo si sabemos que había uno
+    if onep(numero):
+        par = None
+        for conteo in guia.items():
+            if conteo[1] >= 2:
+                par = conteo[0]
+                break
+        # Quitamos el que había
+        del guia[par]
+        # Segundo par
+        for conteo in guia.values():
+            if conteo >= 2:
+                return True
+        return False
+    else:
+        return False
+def td(numero):
+    return not (len(numero) != len(set(numero)))
+def tipo(numero):
+    if quintilla(numero):
+        return 'quintilla'
+    elif poker(numero):
+        return 'poker'
+    elif full(numero):
+        return 'full'
+    elif tercia(numero):
+        return 'tercia'
+    elif twop(numero):
+        return '2p'
+    elif onep(numero):
+        return '1p'
+    else:
+        return 'td'
+```
+Como prueba se proveen los archivos `numeros-poker.txt` y `numeros-poker-2.txt` los cuales contienen 100 mil números cada uno de la siguiente forma:
+```
+0.9040738351136421
+0.8871326759650664
+0.799542640430318
+0.7920153165078209
+0.020045744228985196
+...
+..
+.
+```
+En el archivo `poker.py` se cargan los números a probar desde archivos de texto así:
+```python
+import manos
+
+# Nivel de verbose
+entrada = input("Desea ver todos los detalles?(Y/N) >")
+IMPRIMIR = (entrada == 'Y' or entrada == 'y')
+# Leyendo números
+numeros = []
+ruta = "numeros-poker.txt"
+# ruta = "numeros-poker-2.txt"
+with open(ruta, "r") as archivo:
+    for linea in archivo:
+        numeros.append(linea[2:7])
+    archivo.close()
+
+# Mostrando números
+if IMPRIMIR:
+  print(numeros)
+```
+Según la entrada del usuario (Y/N) se mostraran los números en la salida. A continuación se haya la frecuencia observada y la frecuencia esperada así:
+```python
+# Frecuencia observada
+fo = {'td':0, '1p':0, '2p':0, 'tercia':0, 'full':0, 'poker':0, 'quintilla':0}
+# Frecuencia esperada
+fe = {'td':0, '1p':0, '2p':0, 'tercia':0, 'full':0, 'poker':0, 'quintilla':0}
+# Calculando frecuencia esperada
+for tipo_mano in fe.keys():
+    fe[tipo_mano] = len(numeros) * manos.probabilidad[tipo_mano]
+
+# Contando la frecuencia observada
+for numero in numeros:
+    fo[manos.tipo(numero)] += 1
+    if IMPRIMIR:
+        print("#", numero)
+        print("quintilla:", manos.quintilla(numero))
+        print("poker:", manos.poker(numero))
+        print("full:", manos.full(numero))
+        print("tercia:", manos.tercia(numero))
+        print("2p:", manos.twop(numero))
+        print("1p:", manos.onep(numero))
+        print("td:", manos.td(numero))
+        print("-"*5)
+```
+Un ejemplo de la salida en caso que `IMPRIMIR = True` seria:
+```shell
+.
+..
+...
+# 52806
+quintilla: False
+poker: False
+full: False
+tercia: False
+2p: False
+1p: False
+td: True
+-----
+# 38412
+quintilla: False
+poker: False
+full: False
+tercia: False
+2p: False
+1p: False
+td: True
+...
+..
+.
+```
+- `td` todos diferentes
+- `1p` 1 par
+- `2p` 2 pares
+- `tercia` 3 iguales
+- `full` 1 trio y 1 par
+- `poker` 4 iguales
+- `quintilla` todos iguales
+Luego se calcula el `X^2` y se da el resultado así:
+```python
+# Mostrar la frecuencia esperada y observada obtenida
+if IMPRIMIR:
+    print("#"*5, "Frecuencias", "#"*5)
+    print(fe, "=", sum(fe.values()))
+    print(fo, "=", sum(fo.values()))
+
+# Calculando X^2
+sum = 0.0
+for tipo_mano in fe.keys():
+    sum += ((fo[tipo_mano]-fe[tipo_mano])**2)/fe[tipo_mano]
+
+# Resultado
+print(sum, "< 7.81")
+if sum < 7.81:
+    print("No se rechaza que los números siguen una distribución uniforme")
+else:
+    print("Se rechaza que los números siguen una distribución uniforme")
+```
+Un ejemplo de la salida en caso que `IMPRIMIR = True` seria:
+```shell
+##### Frecuencias #####
+{'td': 30240.0, '1p': 50400.0, '2p': 10800.0, 'tercia': 7199.999999999999, 'full': 899.9999999999999, 'poker': 449.99999999999994, 'quintilla': 10.0} = 100000.0
+{'td': 30388, '1p': 50312, '2p': 10959, 'tercia': 7009, 'full': 876, 'poker': 450, 'quintilla': 6} = 100000
+10.525628306878252 < 7.81
+Se rechaza que los números siguen una distribución uniforme
+```
+
 ## Volados
 
 Esta juego esta explicado de la siguiente forma:
@@ -148,7 +377,6 @@ Ganó
 % de Ganar 80.00%
 % de Perder 20.00%
 ```
-
 Para ver el código completo, [click aqui](Volados.py).
 
 ## Procedimientos especiales (Dist Normal)

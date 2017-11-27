@@ -4,7 +4,7 @@ import manos
 entrada = input("Desea ver todos los detalles?(Y/N) >")
 IMPRIMIR = (entrada == 'Y' or entrada == 'y')
 
-# Leyendo numeros
+# Leyendo números
 numeros = []
 ruta = "numeros-poker.txt"
 # ruta = "numeros-poker-2.txt"
@@ -13,7 +13,7 @@ with open(ruta, "r") as archivo:
         numeros.append(linea[2:7])
     archivo.close()
 
-# Mostrando numeros
+# Mostrando números
 if IMPRIMIR:
   print(numeros)
 
@@ -53,6 +53,6 @@ for tipo_mano in fe.keys():
 # Resultado
 print(sum, "< 7.81")
 if sum < 7.81:
-  print("No se rechaza que los numeros siguen una distribucion uniforme")
+    print("No se rechaza que los números siguen una distribución uniforme")
 else:
-  print("Se rechaza que los numeros siguen una distribucion uniforme")
+    print("Se rechaza que los números siguen una distribución uniforme")

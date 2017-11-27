@@ -1,3 +1,4 @@
+# manos.py
 """
 td - todos diferentes
 1p - 1 par
@@ -60,14 +61,14 @@ def twop(numero):
     for digito in numero:
         guia[digito]+=1
     # Primer par
-    # Solo si sabemos que habia uno
+    # Solo si sabemos que había uno
     if onep(numero):
         par = None
         for conteo in guia.items():
             if conteo[1] >= 2:
                 par = conteo[0]
                 break
-        # Quitamos el que habia
+        # Quitamos el que había
         del guia[par]
         # Segundo par
         for conteo in guia.values():
