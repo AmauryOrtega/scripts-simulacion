@@ -231,6 +231,7 @@ Un ejemplo de la salida en caso que `IMPRIMIR = True` seria:
 10.525628306878252 < 7.81
 Se rechaza que los números siguen una distribución uniforme
 ```
+Para ver el código completo, [Poker.py](Poker.py) y [manos.py](manos.py).
 
 ## Volados
 
