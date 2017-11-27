@@ -127,6 +127,7 @@ Como prueba se proveen los archivos `numeros-poker.txt` y `numeros-poker-2.txt` 
 ```
 En el archivo `poker.py` se cargan los números a probar desde archivos de texto así:
 ```python
+# poker.py
 import manos
 
 # Nivel de verbose
